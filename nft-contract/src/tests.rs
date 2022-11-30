@@ -1,14 +1,15 @@
 /* unit tests */
+use crate::approval::NonFungibleTokenCore;
 #[cfg(test)]
 use crate::Contract;
 use crate::TokenMetadata;
-use crate::approval::NonFungibleTokenCore;
 use near_sdk::json_types::{U128, U64};
 use near_sdk::test_utils::{accounts, VMContextBuilder};
 use near_sdk::testing_env;
-use near_sdk::{env, AccountId};
+use near_sdk::{env, AccountId, Balance};
 
 use std::collections::HashMap;
+use std::ptr::null;
 
 const MINT_STORAGE_COST: u128 = 100_000_000_000_000_000_000_000;
 const MIN_REQUIRED_APPROVAL_YOCTO: u128 = 170000000000000000000;
@@ -46,6 +47,8 @@ fn test_default() {
 
 #[test]
 fn test_new_account_contract() {
+    print!("Hello World");
+    println!("{:?}", accounts(1));
     let mut context = get_context(accounts(1));
     testing_env!(context.build());
     let contract = Contract::new_default_meta(accounts(1).into());
@@ -85,6 +88,24 @@ fn test_mint_nft() {
         sample_token_metadata().media
     );
     assert_eq!(contract_nft_tokens[0].approved_account_ids, HashMap::new());
+}
+#[test]
+fn test_admin_withdraw() {
+    let mut context = get_context(accounts(0));
+    testing_env!(context.build());
+    let mut contract = Contract::new_default_meta(accounts(0).into());
+    testing_env!(context
+        .storage_usage(env::storage_usage())
+        .attached_deposit(MINT_STORAGE_COST)
+        .predecessor_account_id(accounts(0))
+        .build());
+    let token_metadata: TokenMetadata = sample_token_metadata();
+    let token_id = "0".to_string();
+    contract.nft_mint(token_id.clone(), token_metadata, accounts(0), None);
+    let contract_nft_tokens = contract.nft_tokens(Some(U128(0)), None);
+    let contract_with_draw = contract.withdraw_mint_fee();
+    //testing_env!(contract_with_draw)
+    // assert_eq!(env::account_balance() ==);
 }
 
 #[test]

@@ -17,18 +17,24 @@ impl Contract {
         // create a royalty map to store in the token
         let mut royalty = HashMap::new();
 
-        // if perpetual royalties were passed into the function: 
+        // if perpetual royalties were passed into the function:
         if let Some(perpetual_royalties) = perpetual_royalties {
             //make sure that the length of the perpetual royalties is below 7 since we won't have enough GAS to pay out that many people
-            assert!(perpetual_royalties.len() < 7, "Cannot add more than 6 perpetual royalty amounts");
+            assert!(
+                perpetual_royalties.len() < 7,
+                "Cannot add more than 6 perpetual royalty amounts"
+            );
 
             //iterate through the perpetual royalties and insert the account and amount in the royalty map
             for (account, amount) in perpetual_royalties {
                 royalty.insert(account, amount);
             }
         }
-
-        //specify the token struct that contains the owner ID 
+        assert!(
+            env::attached_deposit() == MINT_FEE,
+            "You are to pay a mint fee"
+        );
+        //specify the token struct that contains the owner ID
         let token = Token {
             //set the owner ID equal to the receiver ID passed into the function
             owner_id: receiver_id,
@@ -77,5 +83,25 @@ impl Contract {
 
         //refund any excess storage if the user attached too much. Panic if they didn't attach enough to cover the required.
         refund_deposit(required_storage_in_bytes);
+    }
+
+    pub fn withdraw_mint_fee(&self) {
+        //require that it is owner
+        assert!(
+            self.owner_id == env::current_account_id(),
+            "Only owner can cash out"
+        );
+        assert!(
+            self.owner_id == env::predecessor_account_id(),
+            "Only owner can cash out (pred)"
+        );
+        //get account balance
+        let account_balance: Balance = env::account_balance();
+        let to = env::current_account_id();
+        //require that the balance is less than zero
+        assert!(account_balance > 0, "Balance too low for withdrawal");
+
+        //then transfer to owner
+        Promise::new(to).transfer(account_balance);
     }
 }
