@@ -103,7 +103,7 @@ fn test_admin_withdraw() {
     let token_id = "0".to_string();
     contract.nft_mint(token_id.clone(), token_metadata, accounts(0), None);
     let contract_nft_tokens = contract.nft_tokens(Some(U128(0)), None);
-    let contract_with_draw = contract.withdraw_mint_fee();
+    let contract_with_draw: () = contract.withdraw_mint_fee();
     //testing_env!(contract_with_draw)
     // assert_eq!(env::account_balance() ==);
 }
