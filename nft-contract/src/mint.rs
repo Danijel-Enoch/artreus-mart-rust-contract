@@ -31,7 +31,7 @@ impl Contract {
             }
         }
         assert!(
-            env::attached_deposit() == MINT_FEE,
+            env::attached_deposit() >= MINT_FEE,
             "You are to pay a mint fee"
         );
         //specify the token struct that contains the owner ID
