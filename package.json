@@ -15,3 +15,6 @@
                 "test:integration:rs": "cd integration-tests/rs && cargo run --example integration-tests"
     }
 }
+
+
+// near deploy --wasmFile out/market.wasm --accountId marketplace.danieldave.testnet
