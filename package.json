@@ -1,8 +1,8 @@
 {
-	"name": "nft-tutorial",
+	"name": "artreus_nft",
 	"version": "1.0.0",
-	"description": "Zero to Hero NFT Tutorial",
-	"author": "Ben Kurrek",
+	"description": "Artreus NFT Smart contract",
+	"author": "DANIEL OLIADE",
 	"license": "ISC",
 	"scripts": {
 		"build": "cd nft-contract && bash build.sh && cd .. && ls && cd market-contract && bash build.sh && cd .. && cd nft-series && bash build.sh && cd ..",

@@ -78,13 +78,13 @@ near deploy --accountId $NFT_CONTRACT_ID --wasmFile out/main.wasm
 ### Initialize Your Contract
 
 ```=bash
-near call $NFT_CONTRACT_ID new_default_meta '{"owner_id": "'$NFT_CONTRACT_ID'"}' --accountId $NFT_CONTRACT_ID
+near call $nft_minter new_default_meta '{"owner_id": "'$admin'"}' --accountId $nft_minter
 ```
 
 ### View Contracts Meta Data
 
 ```=bash
-near view $NFT_CONTRACT_ID nft_metadata
+near view $nft_minter nft_metadata
 ```
 
 ### Minting Token
@@ -111,6 +111,9 @@ Then run the following
 
 ```bash=
 MAIN_ACCOUNT_2=your-second-wallet-account.testnet
+
+// near deploy --wasmFile out/market.wasm --accountId marketplace.artreus.near
+ near deploy --wasmFile out/main.wasm --accountId minter.artreus.near
 ```
 
 Verify the correct variable names with this
